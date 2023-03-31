@@ -1,39 +1,43 @@
-// import { GoogleLogin } from '@react-oauth/google';
-// import jwt_decode from "jwt-decode";
-// import { useState } from 'react';
+import { useEffect, useState } from "react";
 import "./App.css";
-import Login from './Login';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./Login";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
+import { ProtectedRoute, AnonymousRoute } from "./ProtectedRoute";
 
 function App() {
-  // const [login, setLogin] = useState(false);
-  // const [userInfo, setUserInfo] = useState({});
+  // Initialize state from localStorage
+  const [user, setUser] = useState(() => {
+    return JSON.parse(localStorage.getItem("user")) ?? null;
+  });
+
+  // Side-effect to persist state changes to localStorage
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
+  const handleLogin = (userData) => setUser(userData);
+
   return (
     <div className="App">
-      {/* {login ? <div className='profile'>
-        <img className='profilePic' src={userInfo.picture} alt="Profile Pic"/>
-        <h2 className='name'>{userInfo.name}</h2>
-      </div> : <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-          var decoded = jwt_decode(credentialResponse.credential);
-          console.log(decoded)
-          setUserInfo(decoded);
-          setLogin(true);
-          
-        }}
-        onError={() => {
-          console.log('Login Failed');
-        }}
-        className="login-btn"
-      />} */}
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<Login/>} />
-          <Route exact path="/home" element={<Home/>} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+
+          <Route element={<AnonymousRoute isAuthenticated={!!user} />}>
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            {/* ... other "anonymous" routes ... */}
+          </Route>
+
+          <Route element={<ProtectedRoute isAuthenticated={!!user} />}>
+            <Route
+              path="/home"
+              element={<Home user={user} setUser={setUser} />}
+            />
+            {/* ... other "authenticated" routes ... */}
+          </Route>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
