@@ -8,8 +8,11 @@ import { ProtectedRoute, AnonymousRoute } from "./ProtectedRoute";
 function App() {
   // Initialize state from localStorage
   const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user")) ?? null;
+    const storedUser = localStorage.getItem("user");
+    console.log("Stored user:", storedUser);
+    return storedUser !== null ? JSON.parse(storedUser) : null;
   });
+
 
   // Side-effect to persist state changes to localStorage
   useEffect(() => {
