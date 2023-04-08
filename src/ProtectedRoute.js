@@ -1,9 +1,10 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 // Unauthenticated users redirected to log in route
 const ProtectedRoute = ({ isAuthenticated }) => {
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+    const location = useLocation()
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" state={{from:location}} replace />;
 };
 
 

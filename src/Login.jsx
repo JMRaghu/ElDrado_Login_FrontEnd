@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./login.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -10,14 +10,17 @@ const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(false);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const currentLocation = useLocation()
+  const from  = currentLocation.state?.from?.pathname || "/home"
+  console.log("currentLocation.state?",from)
 
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    console.log('handleLogin called');
     setErrorMsg("");
     try {
       // Call mutation trigger and await and unwrap resolved response
@@ -27,7 +30,7 @@ const Login = ({ onLogin }) => {
       onLogin(userData.user);
 
       // Redirect back to home
-      navigate("/home", { replace: true });
+      navigate(from, { replace: true });
     } catch (error) {
       setErrorMsg(true);
     }

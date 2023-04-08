@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -27,9 +28,9 @@ function Navbar({ role, setUser }) {
   const [displayPages, setDisplayPages] = React.useState([]);
   let navigate = useNavigate();
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     setDisplayPages(pages[role]);
-  }, [role]);
+  }, [role]); */
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -104,7 +105,7 @@ function Navbar({ role, setUser }) {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {displayPages.map((page) => (
+              {displayPages && displayPages.map((page) => (
                 <MenuItem
                   key={page}
                   sx={{ bgcolor: "#002984" }}
@@ -135,7 +136,7 @@ function Navbar({ role, setUser }) {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {displayPages.map((page) => (
+            {displayPages && displayPages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -189,3 +190,5 @@ function Navbar({ role, setUser }) {
   );
 }
 export default Navbar;
+
+ 

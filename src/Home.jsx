@@ -1,12 +1,24 @@
-import Navbar from "./components/Navbar";
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import Sidebar from './Sidebar';
 
 const Home = ({ user, setUser }) => {
-  console.log("user", user);
+  const [openSidebar, setOpenSidebar] = useState(false);
+
+  const handleSidebarOpen = () => {
+    setOpenSidebar(true);
+  };
+
+  const handleSidebarClose = () => {
+    setOpenSidebar(false);
+  };
+
   return (
     <div>
-      <Navbar role={user.role} setUser={setUser} />
+      <Navbar role={user.role} setUser={setUser} handleSidebarOpen={handleSidebarOpen} />
+      <Sidebar open={openSidebar} onClose={handleSidebarClose} user={user} />
       <h1>{`Welcome ${user.fullName}`}</h1>
-      <h3>{`Role: ${user.role}`}</h3>
+      <h3>{`Role: ${user.roles}`}</h3>
     </div>
   );
 };
